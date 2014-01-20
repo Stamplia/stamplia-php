@@ -31,32 +31,31 @@ class Stamplia extends IdentityProvider{
     {
         try {
 
-            $client = new GuzzleClient('https://stamplia.com/api/users/me?access_token='.$token);
+            $client = new GuzzleClient('https://stamplia.com/api/users/me.json?access_token='.$token);
             $request = $client->get()->send();
             $response = $request->getBody();
-
+            $r = json_decode($response);
+            return 'https://stamplia.com'.$r->_links->me->href.'.json?access_token='.$token;
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
-
             $raw_response = explode("\n", $e->getResponse());
             throw new IDPException(end($raw_response));
 
         }
-        $r = json_decode($response);
-        return 'https://stamplia.com/api'.$r->data->_links->me->href.'?access_token='.$token;
+
+
     }
 
     public function userDetails($response, AccessToken $token)
     {
 
 
-
         $user = new User;
 
-        $user->uid = $response->data->id;
-        $user->nickname = $response->data->username;
-        $user->name = $response->data->full_name;
-        $user->description = isset($response->data->bio) ? $response->data->bio : null;
-        $user->imageUrl = $response->data->profile_picture;
+        $user->uid = $response->user->id;
+        $user->nickname = $response->user->slug;
+        $user->name = $response->user->name;
+        $user->email = $response->user->email;
+        $user->location = $response->user->country;
 
         return $user;
     }
