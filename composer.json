@@ -5,10 +5,7 @@
         "psr-0": { "": "src/" }
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Kiwup/stamplia-php.git"
-        }
+
     ],
     "require": {
         "php": ">=5.3.3",
