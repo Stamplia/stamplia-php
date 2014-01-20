@@ -9,7 +9,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "adoy/oauth2": "dev-master"
+        "league/oauth2-client": "dev-master"
     },
 
     "minimum-stability": "dev",
