@@ -125,6 +125,29 @@ class Api{
                 'parameters' => array('userId', 'templateId'),
                 'namespace' => 'template',
             ),
+            'getUserPurchases' => array(
+                'method' => 'get',
+                'url' => '/users/{userId}/purchases',
+                'parameters' => array('userId'),
+                'namespace' => 'purchases',
+            ),
+            'postUserPurchases' => array(
+                'method' => 'post',
+                'url' => '/users/{userId}/purchases',
+                'parameters' => array('userId', 'coupon'),
+                'namespace' => 'purchase',
+            ),
+            'makePayment' => array(
+                'method' => 'post',
+                'url' => '/users/{userId}/invoices/{invoiceId}/payments',
+                'parameters' => array('userId', 'invoiceId', 'method', 'redirect_uri'),
+            ),
+            'getUserPurchase' => array(
+                'method' => 'get',
+                'url' => '/users/{userId}/purchases/{purchaseId}',
+                'parameters' => array('userId', 'purchaseId'),
+                'namespace' => 'purchases',
+            ),
             'postUserTemplate' => array(
                 'method' => 'post',
                 'url' => '/users/{userId}/templates',
