@@ -63,6 +63,14 @@ The methods you can use are the following:
 
     $client->postUserTemplate('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category');
 
+    $client->getUserPurchases('userId');
+
+    $client->getUserPurchase('userId', 'purchaseId');
+
+    $client->postUserPurchase('userId', 'coupon');
+
+    $client->makePayment('userId', 'invoiceId', 'method', 'redirect_uri');
+
     $client->putUserTemplate'userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category');
 
     $client->postCart('user', 'coupon', 'templates');
@@ -74,4 +82,4 @@ The methods you can use are the following:
     $client->getCart('id');
 
 
-Please read http://dev.stamplia.com for the specific parameters that each method accepts
+Please read http://dev.stamplia.com for the specific parameters that each method accepts and their results
