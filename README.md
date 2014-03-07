@@ -35,6 +35,11 @@ You can then create a OAuth provider with your app data, create a new API client
 
     $client = new \Kiwup\StampliaClient\Client\Api($provider);
 
+Get the access token and save it to your database for example for later use
+
+    $access_token = $client->getAccessToken();
+    //TODO save access token for this user to local database
+
 The methods you can use are the following:
 
     $client->createUser('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat');

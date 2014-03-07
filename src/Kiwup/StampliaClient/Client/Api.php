@@ -15,44 +15,89 @@ use Guzzle\Http\StaticClient as GuzzleClient;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
 
-class Api{
+class Api {
     protected $provider;
     protected $accessToken;
+    protected $refreshToken;
+    protected $accessTokenExpires;
+
     protected $allowedMethods;
-    protected $baseUrl = 'https://stamplia.com/api';
+    protected $domain = 'preprod.stamplia.com';
+    protected $protocol = 'https';
+    protected $apiUrl = '/api';
+
+    protected $baseUrl;
 
     public function __construct(Stamplia $provider, $accessToken = null)
     {
-
         $this->provider = $provider;
+    }
+
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
+    }
+
+    public function setRefreshToken($token)
+    {
+        $this->refreshToken = $token;
+    }
+
+    public function setAccessTokenExpires($accessTokenExpires)
+    {
+        $this->accessTokenExpires = $accessTokenExpires;
+    }
+
+    public function getAccessTokenExpires()
+    {
+        return $this->accessTokenExpires;
+    }
+
+    public function setAccessToken($accessToken = null, $expires = null, $refreshToken = null)
+    {
         $this->accessToken = $accessToken;
+        $this->accessTokenExpires = $expires;
+        $this->refreshToken = $refreshToken;
 
-        if($this->accessToken) {
-            return;
-        }
+        if(!$this->accessToken) {
+            if ( ! isset($_GET['code'])) {
+                // If we don't have an authorization code then get one
+                $this->provider->authorize();
+            } else {
+                try {
+                    // Try to get an access token (using the authorization code grant)
 
-        if ( ! isset($_GET['code'])) {
-            // If we don't have an authorization code then get one
-            $this->provider->authorize();
-        } else {
+                    $tokens = $this->provider->getAccessToken('authorization_code', array('code' => $_GET['code']));
 
+                    $this->accessToken = $tokens->accessToken;
+                    $this->accessTokenExpires = $tokens->expires;
+                    $this->refreshToken = $tokens->refreshToken;
+                    //TODO save the access token in your database
+
+                } catch (\Exception $e) {
+                    echo 'Failed to get access token '.$e->getMessage();
+                }
+            }
+        }elseif($this->accessTokenExpires <= time()) { //token is expired, get a new one from refresh token
             try {
-                // Try to get an access token (using the authorization code grant)
-                $this->accessToken = $this->provider->getAccessToken('authorization_code', array('code' => $_GET['code']))->accessToken;
+                // Try to get an access token (using the refresh token grant)
 
-                //TODO save the access token in your database
+                $tokens = $this->provider->refreshAccessToken('refresh_token', array('refresh_token' => $this->refreshToken));
+
+                $this->accessToken = $tokens->accessToken;
+                $this->accessTokenExpires = $tokens->expires;
+                $this->refreshToken = $tokens->refreshToken;
+                //TODO save the access tokens in your database
 
             } catch (\Exception $e) {
-                echo 'failed to get access token '.$e->getMessage();
-                // Failed to get access token
-
+                echo 'Failed to get access token '.$e->getMessage();
             }
         }
-
-
-
-
-
     }
 
     public function getAllowedMethods(){
@@ -142,6 +187,11 @@ class Api{
                 'url' => '/users/{userId}/invoices/{invoiceId}/payments',
                 'parameters' => array('userId', 'invoiceId', 'method', 'redirect_uri'),
             ),
+            'getPayment' => array(
+                'method' => 'get',
+                'url' => '/users/{userId}/invoices/{invoiceId}/payments',
+                'parameters' => array('userId', 'invoiceId'),
+            ),
             'getUserPurchase' => array(
                 'method' => 'get',
                 'url' => '/users/{userId}/purchases/{purchaseId}',
@@ -187,16 +237,26 @@ class Api{
         );
     }
 
-
-
-
-    public function __call($name, $arguments){
+    public function __call($name, $arguments) {
         $methods = $this->getAllowedMethods();
         if(!isset($methods[$name])) {
             throw new StampliaApiException('Method '.$name.' is not supported');
         }
 
+        $anonymousActions = array(
+            'createUser',
+            'getTemplates',
+            'getTemplate',
+            'getCategories',
+            'getCategory',
+        );
+
         $action = $methods[$name];
+
+        if(!$this->accessToken && !in_array($name, $anonymousActions)) {
+            $this->setAccessToken();
+        }
+
         $data = array();
         $namespace = null;
         if(isset($action['namespace'])) {
@@ -206,7 +266,6 @@ class Api{
         if(isset($arguments[0]) && is_array($arguments[0])) {
             $parameters = $arguments[0];
 
-
             foreach($parameters as $key => $val) {
                 if(in_array($key, $action['parameters'])) {
 
@@ -215,15 +274,14 @@ class Api{
                     } else {
                         $data[$key] = $val;
                     }
-
-
-
                 }
             }
         }
         //TODO replace parameters in URL
 
-        return $this->request($action['method'], $this->baseUrl.$action['url'], $data, $namespace);
+        $url = $this->getBaseUrl().$action['url'];
+
+        return $this->request($action['method'], $url, $data, $namespace);
     }
 
     public function request($method, $url, $data = null, $namespace = null) {
@@ -237,6 +295,7 @@ class Api{
                         ),
                         'query' => array('access_token' => $this->accessToken),
                         'debug' => true,
+                        'verify' => false,
                     ));
 
                     break;
@@ -250,6 +309,7 @@ class Api{
                         'body' => json_encode($data),
                         'query' => array('access_token' => $this->accessToken),
                         'debug' => true,
+                        'verify' => false,
                     ));
                     break;
                 case 'put':
@@ -262,6 +322,7 @@ class Api{
                         'body' => json_encode($data),
                         'query' => array('access_token' => $this->accessToken),
                         'debug' => true,
+                        'verify' => false,
                     ));
                     break;
                 case 'delete':
@@ -273,11 +334,13 @@ class Api{
                         ),
                         'query' => array('access_token' => $this->accessToken),
                         'debug' => true,
+                        'verify' => false,
                     ));
                     break;
             }
 
             $r = json_decode($response->getBody());
+
             if($namespace) {
                 return $r->{$namespace};
             }
@@ -285,9 +348,66 @@ class Api{
 
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
             $raw_response = explode("\n", $e->getResponse());
-            throw new StampliaApiException(end($raw_response));
 
+            throw new StampliaApiException(end($raw_response));
         }
     }
 
-} 
+
+    /**
+     * @param string $apiUrl
+     */
+    public function setApiUrl($apiUrl)
+    {
+        $this->apiUrl = $apiUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiUrl()
+    {
+        return $this->apiUrl;
+    }
+
+    /**
+     * @param string $domain
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+    /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->protocol.'://'.$this->domain.$this->apiUrl;
+    }
+
+
+}
