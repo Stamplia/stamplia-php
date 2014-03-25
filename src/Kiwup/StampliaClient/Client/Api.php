@@ -14,6 +14,7 @@ use Kiwup\StampliaClient\Provider\Stamplia;
 use Guzzle\Http\StaticClient as GuzzleClient;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
+use League\OAuth2\Client\Provider\IdentityProvider;
 
 class Api {
     protected $provider;
@@ -22,13 +23,13 @@ class Api {
     protected $accessTokenExpires;
 
     protected $allowedMethods;
-    protected $domain = 'preprod.stamplia.com';
+    protected $domain = 'stamplia.no-ip.org';
     protected $protocol = 'https';
     protected $apiUrl = '/api';
 
     protected $baseUrl;
 
-    public function __construct(Stamplia $provider, $accessToken = null)
+    public function __construct(IdentityProvider $provider, $accessToken = null)
     {
         $this->provider = $provider;
     }
@@ -105,7 +106,7 @@ class Api {
             'createUser' => array(
                 'method' => 'post',
                 'url' => '/users',
-                'parameters' => array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat', 'client_id'),
                 'namespace' => 'user',
             ),
             'getUser' => array(
@@ -277,6 +278,11 @@ class Api {
                 }
             }
         }
+
+        if($name == 'createUser') {
+            $data['client_id'] = $this->provider->clientId;
+        }
+
         //TODO replace parameters in URL
 
         $url = $this->getBaseUrl().$action['url'];

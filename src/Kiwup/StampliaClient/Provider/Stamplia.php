@@ -15,6 +15,7 @@ use League\OAuth2\Client\Token\AccessToken;
 use Guzzle\Service\Client as GuzzleClient;
 use League\OAuth2\Client\Exception\IDPException as IDPException;
 use League\OAuth2\Client\Grant\GrantInterface;
+use Kiwup\StampliaClient\Grant\Refreshtoken;
 
 class Stamplia extends IdentityProvider{
 
