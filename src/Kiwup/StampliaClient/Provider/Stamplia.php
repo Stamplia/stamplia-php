@@ -19,14 +19,18 @@ use Kiwup\StampliaClient\Grant\Refreshtoken;
 
 class Stamplia extends IdentityProvider{
 
+    protected $_urlAuthorize = 'https://stamplia.com/authorize';
+
+    protected $_urlAccessToken = 'https://stamplia.com/oauth/v2/token';
+
     public function urlAuthorize()
     {
-        return 'https://preprod.stamplia.com/authorize';
+        return $this->getUrlauthorize();
     }
 
     public function urlAccessToken()
     {
-        return 'https://preprod.stamplia.com/oauth/v2/token';
+        return $this->getUrlaccesstoken();
     }
 
     public function refreshAccessToken($grant = 'refresh_token', $params = array())
@@ -117,4 +121,22 @@ class Stamplia extends IdentityProvider{
 
         return $user;
     }
-} 
+
+    public function getUrlauthorize() {
+        return $this->_urlAuthorize;
+    }
+
+    public function setUrlauthorize($_urlAuthorize) {
+        $this->_urlAuthorize = $_urlAuthorize;
+        return $this;
+    }
+
+    public function getUrlaccesstoken() {
+        return $this->_urlAccessToken;
+    }
+
+    public function setUrlaccesstoken($_urlAccessToken) {
+        $this->_urlAccessToken = $_urlAccessToken;
+        return $this;
+    }
+}
