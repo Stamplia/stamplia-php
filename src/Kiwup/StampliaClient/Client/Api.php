@@ -23,15 +23,16 @@ class Api {
     protected $accessTokenExpires;
 
     protected $allowedMethods;
-    protected $domain = 'stamplia.no-ip.org';
+    protected $domain;
     protected $protocol = 'https';
     protected $apiUrl = '/api';
 
     protected $baseUrl;
 
-    public function __construct(IdentityProvider $provider, $accessToken = null)
+    public function __construct(IdentityProvider $provider, $accessToken = null, $domain = 'stamplia.com')
     {
         $this->provider = $provider;
+        $this->domain = $domain;
     }
 
     public function getAccessToken()
@@ -294,12 +295,13 @@ class Api {
         try {
             switch (strtolower($method)) {
                 case 'get':
+                    $query = array_merge($data, array('access_token' => $this->accessToken));
                     $response = GuzzleClient::get($url, array(
                         'headers' => array(
                             'Authorization' => 'bearer '.$this->accessToken,
                             'Accept' => 'application/json',
                         ),
-                        'query' => array('access_token' => $this->accessToken),
+                        'query' => $query,
                         'debug' => true,
                         'verify' => false,
                     ));
@@ -345,7 +347,10 @@ class Api {
                     break;
             }
 
-            $r = json_decode($response->getBody());
+
+            $body = $response->getBody();
+            $a = $body->__toString();
+            $r = json_decode($a);
 
             if($namespace) {
                 return $r->{$namespace};
@@ -354,10 +359,11 @@ class Api {
 
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
             $raw_response = explode("\n", $e->getResponse());
-
+            //var_dump($e);
             throw new StampliaApiException(end($raw_response));
         }
     }
+
 
 
     /**
