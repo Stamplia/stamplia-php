@@ -19,14 +19,16 @@ use Kiwup\StampliaClient\Grant\Refreshtoken;
 
 class Stamplia extends IdentityProvider{
 
+    protected $domain = 'https://stamplia.com';
+
     public function urlAuthorize()
     {
-        return 'https://stamplia.com/authorize';
+        return $this->domain.'/authorize';
     }
 
     public function urlAccessToken()
     {
-        return 'https://stamplia.com/oauth/v2/token';
+        return $this->domain.'/oauth/v2/token';
     }
 
     public function refreshAccessToken($grant = 'refresh_token', $params = array())
@@ -89,11 +91,11 @@ class Stamplia extends IdentityProvider{
     {
         try {
 
-            $client = new GuzzleClient('https://stamplia.com/api/users/me.json?access_token='.$token);
+            $client = new GuzzleClient($this->domain.'/api/users/me.json?access_token='.$token);
             $request = $client->get()->send();
             $response = $request->getBody();
             $r = json_decode($response);
-            return 'https://stamplia.com'.$r->_links->me->href.'.json?access_token='.$token;
+            return $this->domain.$r->_links->me->href.'.json?access_token='.$token;
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
             $raw_response = explode("\n", $e->getResponse());
             throw new IDPException(end($raw_response));
@@ -103,10 +105,21 @@ class Stamplia extends IdentityProvider{
 
     }
 
+    public function getUrlauthorize() {
+        return $this->urlAuthorize();
+    }
+
+    public function setDomain($domain) {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    public function getUrlaccesstoken() {
+        return $this->urlAccessToken();
+    }
+
     public function userDetails($response, AccessToken $token)
     {
-
-
         $user = new User;
 
         $user->uid = $response->user->id;
