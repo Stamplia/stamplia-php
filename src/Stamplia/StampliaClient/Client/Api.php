@@ -7,10 +7,10 @@
  * Time: 13:57
  */
 
-namespace Kiwup\StampliaClient\Client;
+namespace Stamplia\StampliaClient\Client;
 
-use Kiwup\StampliaClient\Exception\StampliaApiException;
-use Kiwup\StampliaClient\Provider\Stamplia;
+use Stamplia\StampliaClient\Exception\StampliaApiException;
+use Stamplia\StampliaClient\Provider\Stamplia;
 use Guzzle\Http\StaticClient as GuzzleClient;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;

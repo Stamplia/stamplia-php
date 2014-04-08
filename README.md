@@ -12,12 +12,12 @@ Add the following to your composer.json file
         "repositories": [
             {
                 "type": "vcs",
-                "url": "https://github.com/Kiwup/stamplia-php.git"
+                "url": "https://github.com/Stamplia/stamplia-php.git"
             }
         ],
         "require": {
             "php": ">=5.3.3",
-            "Kiwup/stamplia-php": "dev-master"
+            "Stamplia/stamplia-php": "dev-master"
         },
 
 Then in your PHP file, require the composer autoloader, something similar to this
@@ -27,13 +27,13 @@ Then in your PHP file, require the composer autoloader, something similar to thi
 
 You can then create a OAuth provider with your app data, create a new API client, and use it:
 
-    $provider = new Kiwup\StampliaClient\Provider\Stamplia(array(
+    $provider = new Stamplia\StampliaClient\Provider\Stamplia(array(
         'clientId'  =>  '12_1fo52xvb0k1wcsck0oc88o8cos8gw44w8gksc0okgcks4gc40g',
         'clientSecret'  =>  '5kwk0of79j8ksgw8c48csgo0so8o8ccs00ssows40c4wc8osg8',
         'redirectUri'   =>  'http://stamplia-client-test.local/index.php'
     ));
 
-    $client = new \Kiwup\StampliaClient\Client\Api($provider);
+    $client = new \Stamplia\StampliaClient\Client\Api($provider);
 
 Get the access token and save it to your database for example for later use
 

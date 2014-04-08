@@ -1,5 +1,5 @@
 {
-    "name": "Kiwup/stamplia-php",
+    "name": "Stamplia/stamplia-php",
     "description": "A PHP client for the Stamplia API",
     "autoload": {
         "psr-0": { "": "src/" }

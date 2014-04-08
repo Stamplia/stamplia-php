@@ -1,6 +1,6 @@
 <?php
 
-namespace Kiwup\StampliaClient\Grant;
+namespace Stamplia\StampliaClient\Grant;
 
 use League\OAuth2\Client\Token\AccessToken as AccessToken;
 use League\OAuth2\Client\Grant\GrantInterface;

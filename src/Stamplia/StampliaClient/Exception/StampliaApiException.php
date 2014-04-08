@@ -7,7 +7,7 @@
  * Time: 09:50
  */
 
-namespace Kiwup\StampliaClient\Exception;
+namespace Stamplia\StampliaClient\Exception;
 
 
 class StampliaApiException extends \Exception{

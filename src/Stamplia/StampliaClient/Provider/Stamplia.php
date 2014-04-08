@@ -7,7 +7,7 @@
  * Time: 11:38
  */
 
-namespace Kiwup\StampliaClient\Provider;
+namespace Stamplia\StampliaClient\Provider;
 
 use League\OAuth2\Client\Provider\IdentityProvider;
 use League\OAuth2\Client\Provider\User;
@@ -15,7 +15,7 @@ use League\OAuth2\Client\Token\AccessToken;
 use Guzzle\Service\Client as GuzzleClient;
 use League\OAuth2\Client\Exception\IDPException as IDPException;
 use League\OAuth2\Client\Grant\GrantInterface;
-use Kiwup\StampliaClient\Grant\Refreshtoken;
+use Stamplia\StampliaClient\Grant\Refreshtoken;
 
 class Stamplia extends IdentityProvider{
 
@@ -34,7 +34,7 @@ class Stamplia extends IdentityProvider{
     public function refreshAccessToken($grant = 'refresh_token', $params = array())
     {
         if (is_string($grant)) {
-            $grant = 'Kiwup\\StampliaClient\\Grant\\'.ucfirst(str_replace('_', '', $grant));
+            $grant = 'Stamplia\\StampliaClient\\Grant\\'.ucfirst(str_replace('_', '', $grant));
             if ( ! class_exists($grant)) {
                 throw new \InvalidArgumentException('Unknown grant "'.$grant.'"');
             }
