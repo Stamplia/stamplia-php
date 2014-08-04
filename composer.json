@@ -1,11 +1,14 @@
 {
-    "name": "Stamplia/stamplia-php",
+    "name": "stamplia/stamplia-php",
     "description": "A PHP client for the Stamplia API",
     "autoload": {
         "psr-0": { "": "src/" }
     },
     "repositories": [
-
+        {
+            "type": "vcs",
+            "url": "https://github.com/Stamplia/oauth2-client.git"
+        }
     ],
     "require": {
         "php": ">=5.3.3",
