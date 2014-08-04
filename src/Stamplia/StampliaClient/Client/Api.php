@@ -16,6 +16,9 @@ use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
 use League\OAuth2\Client\Provider\IdentityProvider;
 
+use Guzzle\Http\Client;
+
+
 class Api {
     protected $provider;
     protected $accessToken;
@@ -286,64 +289,80 @@ class Api {
 
         //TODO replace parameters in URL
 
-        $url = $this->getBaseUrl().$action['url'];
+        $url = $action['url'];
 
         return $this->request($action['method'], $url, $data, $namespace);
     }
 
     public function request($method, $url, $data = null, $namespace = null) {
         try {
+
+            $client = new Client($this->getBaseUrl());
+
             switch (strtolower($method)) {
                 case 'get':
                     $query = array_merge($data, array('access_token' => $this->accessToken));
-                    $response = GuzzleClient::get($url, array(
-                        'headers' => array(
+                    $request = $client->get(
+                        $this->apiUrl.$url,
+                        array(
                             'Authorization' => 'bearer '.$this->accessToken,
                             'Accept' => 'application/json',
                         ),
-                        'query' => $query,
-                        'debug' => true,
-                        'verify' => false,
-                    ));
+                        array(
 
+                            'query' => $query,
+                            'debug' => false,
+                        )
+                    );
+                    $response = $request->send();
                     break;
                 case 'post':
-                    $response = GuzzleClient::post($url, array(
-                        'headers' => array(
+                    $request = $client->post(
+                        $this->apiUrl.$url,
+                        array(
                             'Authorization' => 'bearer '.$this->accessToken,
                             'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ),
-                        'body' => json_encode($data),
-                        'query' => array('access_token' => $this->accessToken),
-                        'debug' => true,
-                        'verify' => false,
-                    ));
+                        json_encode($data),
+                        array(
+                            'query' => array('access_token' => $this->accessToken),
+                            'debug' => false,
+                        )
+                    );
+                    $response = $request->send();
                     break;
                 case 'put':
-                    $response = GuzzleClient::put($url, array(
-                        'headers' => array(
+                    $request = $client->put(
+                        $this->apiUrl.$url,
+                        array(
                             'Authorization' => 'bearer '.$this->accessToken,
                             'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ),
-                        'body' => json_encode($data),
-                        'query' => array('access_token' => $this->accessToken),
-                        'debug' => true,
-                        'verify' => false,
-                    ));
+                        json_encode($data),
+                        array(
+                            'query' => array('access_token' => $this->accessToken),
+                            'debug' => false,
+                        )
+                    );
+                    $response = $request->send();
                     break;
                 case 'delete':
-                    $response = GuzzleClient::delete($url, array(
-                        'headers' => array(
+                    $request = $client->delete(
+                        $this->apiUrl.$url,
+                        array(
                             'Authorization' => 'bearer '.$this->accessToken,
                             'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ),
-                        'query' => array('access_token' => $this->accessToken),
-                        'debug' => true,
-                        'verify' => false,
-                    ));
+                        null,
+                        array(
+                            'query' => array('access_token' => $this->accessToken),
+                            'debug' => false,
+                        )
+                    );
+                    $response = $request->send();
                     break;
             }
 
@@ -363,7 +382,6 @@ class Api {
             throw new StampliaApiException(end($raw_response));
         }
     }
-
 
 
     /**

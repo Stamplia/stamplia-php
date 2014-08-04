@@ -55,13 +55,11 @@ class Stamplia extends IdentityProvider{
             switch ($this->method) {
                 case 'get':
                     $client = new GuzzleClient($this->urlAccessToken() . '?' . http_build_query($requestParams,'','&'));
-                    $client->setSslVerification(false, false, 0);
                     $request = $client->send();
                     $response = $request->getBody();
                     break;
                 case 'post':
                     $client = new GuzzleClient($this->urlAccessToken());
-                    $client->setSslVerification(false, false, 0);
                     $request = $client->post(null, null, $requestParams)->send();
                     $response = $request->getBody();
                     break;
