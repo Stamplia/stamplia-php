@@ -132,6 +132,7 @@ class Api {
             'getCategories' => array(
                 'method' => 'get',
                 'url' => '/categories',
+                'parameters' => array('top_level'),
                 'namespace' => 'categories',
             ),
             'getCategory' => array(
@@ -143,13 +144,13 @@ class Api {
             'getCategoryTemplates' => array(
                 'method' => 'get',
                 'url' => '/categories/{name}/templates',
-                'parameters' => array('name'),
+                'parameters' => array('name', 'page', 'per_page', 'order', 'dir'),
                 'namespace' => 'templates',
             ),
             'getTemplates' => array(
                 'method' => 'get',
                 'url' => '/templates',
-                'parameters' => array('page', 'per_page', 'order', 'dir'),
+                'parameters' => array('page', 'per_page', 'order', 'dir', 'category'),
                 'namespace' => 'templates',
             ),
             'getTemplate' => array(
@@ -157,6 +158,12 @@ class Api {
                 'url' => '/templates/{slug}',
                 'parameters' => array('slug'),
                 'namespace' => 'template',
+            ),
+            'getTemplateLitmustests' => array(
+                'method' => 'get',
+                'url' => '/templates/{id}/litmustests',
+                'parameters' => array('id'),
+                'namespace' => 'litmustests',
             ),
             'postZip' => array(
                 'method' => 'post',
@@ -251,9 +258,12 @@ class Api {
         $anonymousActions = array(
             'createUser',
             'getTemplates',
+            'getTemplateLitmustests',
             'getTemplate',
             'getCategories',
             'getCategory',
+
+            'getCategoryTemplates',
         );
 
         $action = $methods[$name];
@@ -371,7 +381,8 @@ class Api {
             $a = $body->__toString();
             $r = json_decode($a);
 
-            if($namespace) {
+            if($namespace && !isset($r->count)) {
+
                 return $r->{$namespace};
             }
             return $r;
