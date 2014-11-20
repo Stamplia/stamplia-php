@@ -21,12 +21,12 @@ class StampliaLocal extends IdentityProvider{
 
     public function urlAuthorize()
     {
-        return 'http://stamplia.no-ip.org/authorize';
+        return 'https://stamplia.local/authorize';
     }
 
     public function urlAccessToken()
     {
-        return 'http://stamplia.no-ip.org/oauth/v2/token';
+        return 'https://stamplia.local/oauth/v2/token';
     }
 
     public function refreshAccessToken($grant = 'refresh_token', $params = array())
@@ -89,11 +89,11 @@ class StampliaLocal extends IdentityProvider{
     {
         try {
 
-            $client = new GuzzleClient('http://stamplia.no-ip.org/api/users/me.json?access_token='.$token);
+            $client = new GuzzleClient('https://stamplia.local/api/users/me.json?access_token='.$token);
             $request = $client->get()->send();
             $response = $request->getBody();
             $r = json_decode($response);
-            return 'http://stamplia.no-ip.org'.$r->_links->me->href.'.json?access_token='.$token;
+            return 'https://stamplia.local'.$r->_links->me->href.'.json?access_token='.$token;
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
             $raw_response = explode("\n", $e->getResponse());
             throw new IDPException(end($raw_response));

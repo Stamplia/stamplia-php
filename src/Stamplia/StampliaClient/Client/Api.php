@@ -105,6 +105,40 @@ class Api {
         }
     }
 
+    public function login($data = array()) {
+        $client = new Client($this->getBaseUrl());
+
+        $data["client_id"] = $this->provider->clientId;
+        $data["client_secret"] = $this->provider->clientSecret;
+        $data["grant_type"] = "password";
+
+        $client->setSslVerification(false);
+
+        $request = $client->post(
+            '/oauth/v2/token',
+            array(
+
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ),
+            json_encode($data),
+            array(
+
+                'debug' => false,
+            )
+        );
+        $response = $request->send();
+
+        $body = $response->getBody();
+        $a = $body->__toString();
+        $r = json_decode($a);
+
+        $this->setAccessToken($r->access_token, $r->expires_in + time(), $r->refresh_token);
+
+        return $r;
+
+    }
+
     public function getAllowedMethods(){
         return array(
             'createUser' => array(
@@ -113,6 +147,7 @@ class Api {
                 'parameters' => array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat', 'client_id'),
                 'namespace' => 'user',
             ),
+
             'getUser' => array(
                 'method' => 'get',
                 'url' => '/users/{id}',
@@ -304,23 +339,25 @@ class Api {
         return $this->request($action['method'], $url, $data, $namespace);
     }
 
-    public function request($method, $url, $data = null, $namespace = null) {
+    public function request($method, $url, $data = null, $namespace = null, $relativeUrl = false) {
         try {
 
             $client = new Client($this->getBaseUrl());
 
+            $client->setSslVerification(false);
+            $url = $relativeUrl ? $url : $this->apiUrl.$url;
             switch (strtolower($method)) {
                 case 'get':
-                    $query = array_merge($data, array('access_token' => $this->accessToken));
+//                    $query = array_merge($data, array('access_token' => $this->accessToken));
                     $request = $client->get(
-                        $this->apiUrl.$url,
+                        $url,
                         array(
-                            'Authorization' => 'bearer '.$this->accessToken,
+                            'Authorization' => 'Bearer '.$this->accessToken,
                             'Accept' => 'application/json',
                         ),
                         array(
 
-                            'query' => $query,
+                            'query' => $data,
                             'debug' => false,
                         )
                     );
@@ -328,15 +365,15 @@ class Api {
                     break;
                 case 'post':
                     $request = $client->post(
-                        $this->apiUrl.$url,
+                        $url,
                         array(
-                            'Authorization' => 'bearer '.$this->accessToken,
+                            'Authorization' => 'Bearer '.$this->accessToken,
                             'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ),
                         json_encode($data),
                         array(
-                            'query' => array('access_token' => $this->accessToken),
+//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
@@ -344,15 +381,15 @@ class Api {
                     break;
                 case 'put':
                     $request = $client->put(
-                        $this->apiUrl.$url,
+                        $url,
                         array(
-                            'Authorization' => 'bearer '.$this->accessToken,
+                            'Authorization' => 'Bearer '.$this->accessToken,
                             'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ),
                         json_encode($data),
                         array(
-                            'query' => array('access_token' => $this->accessToken),
+//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
@@ -360,15 +397,15 @@ class Api {
                     break;
                 case 'delete':
                     $request = $client->delete(
-                        $this->apiUrl.$url,
+                        $url,
                         array(
-                            'Authorization' => 'bearer '.$this->accessToken,
+                            'Authorization' => 'Bearer '.$this->accessToken,
                             'Content-Type' => 'application/json',
                             'Accept' => 'application/json',
                         ),
                         null,
                         array(
-                            'query' => array('access_token' => $this->accessToken),
+//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
@@ -380,7 +417,7 @@ class Api {
             $body = $response->getBody();
             $a = $body->__toString();
             $r = json_decode($a);
-
+//            var_dump($a);
             if($namespace && !isset($r->count)) {
 
                 return $r->{$namespace};
@@ -389,7 +426,7 @@ class Api {
 
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
             $raw_response = explode("\n", $e->getResponse());
-            //var_dump($e);
+//            var_dump($e);
             throw new StampliaApiException(end($raw_response));
         }
     }
