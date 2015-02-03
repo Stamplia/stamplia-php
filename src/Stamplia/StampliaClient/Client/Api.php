@@ -223,6 +223,7 @@ class Api {
                 'parameters' => array('userId'),
                 'namespace' => 'purchases',
             ),
+                     
             'postUserPurchases' => array(
                 'method' => 'post',
                 'url' => '/users/{userId}/purchases',
@@ -242,6 +243,13 @@ class Api {
             'getUserPurchase' => array(
                 'method' => 'get',
                 'url' => '/users/{userId}/purchases/{purchaseId}',
+                'parameters' => array('userId', 'purchaseId'),
+                'namespace' => 'purchases',
+            ),
+            
+            'downloadUserPurchase' => array(
+                'method' => 'download',
+                'url' => '/users/{userId}/purchases/{purchaseId}.zip',
                 'parameters' => array('userId', 'purchaseId'),
                 'namespace' => 'purchases',
             ),
@@ -406,6 +414,22 @@ class Api {
                         null,
                         array(
 //                            'query' => array('access_token' => $this->accessToken),
+                            'debug' => false,
+                        )
+                    );
+                    $response = $request->send();
+                    break;
+                    
+                
+                case 'download':
+                    $request = $client->get(
+                        $url,
+                        array(
+                            'Authorization' => 'Bearer '.$this->accessToken,
+                            'Accept' => 'application/zip',
+                        ),
+                        array(
+                            'query' => $data,
                             'debug' => false,
                         )
                     );
