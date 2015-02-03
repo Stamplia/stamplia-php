@@ -434,7 +434,8 @@ class Api {
                         )
                     );
                     $response = $request->send();
-                    break;
+                    return $response->getBody();
+                    
             }
 
 
