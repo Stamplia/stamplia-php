@@ -422,18 +422,26 @@ class Api {
                     
                 
                 case 'download':
-                    $request = $client->get(
-                        $url,
-                        array(
-                            'Authorization' => 'Bearer '.$this->accessToken,
-                            'Accept' => 'application/zip',
-                        ),
-                        array(
-                            'query' => $data,
-                            'debug' => false,
-                        )
-                    );
-                    $response = $request->send();
+                    try {
+                        $request = $client->get(
+                            $url,
+                            array(
+                                'Authorization' => 'Bearer '.$this->accessToken,
+                                'Accept' => 'application/zip',
+                            ),
+                            array(
+                                'query' => $data,
+                                'debug' => false,
+                            )
+                        );
+                        $response = $request->send();
+                    } catch(\Guzzle\Http\Exception\BadResponseException $e) {
+                        $raw_response = explode("\n", $e->getResponse());
+                        throw new StampliaApiException(end($raw_response));
+                    } catch(\Exception $e) {
+                        throw new StampliaApiException($e->getMessage());
+                    }
+                    
                     return $response->getBody();
                     
             }
@@ -442,7 +450,7 @@ class Api {
             $body = $response->getBody();
             $a = $body->__toString();
             $r = json_decode($a);
-//            var_dump($a);
+
             if($namespace && !isset($r->count)) {
 
                 return $r->{$namespace};
@@ -451,7 +459,6 @@ class Api {
 
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
             $raw_response = explode("\n", $e->getResponse());
-//            var_dump($e);
             throw new StampliaApiException(end($raw_response));
         }
     }
