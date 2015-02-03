@@ -251,7 +251,7 @@ class Api {
                 'method' => 'download',
                 'url' => '/users/{userId}/purchases/{purchaseId}.zip',
                 'parameters' => array('userId', 'purchaseId'),
-                'namespace' => 'purchases',
+                
             ),
             'postUserTemplate' => array(
                 'method' => 'post',
