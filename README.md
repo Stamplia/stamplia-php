@@ -80,7 +80,7 @@ The methods you can use are the following:
 
     $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
 
-    $client->postCart(array('id', 'coupon', 'templates'));
+    $client->postCart(array('user', 'coupon', 'templates'));
 
     $client->putCart(array('id', 'coupon', 'templates'));
 
