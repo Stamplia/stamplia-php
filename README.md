@@ -42,13 +42,13 @@ Get the access token and save it to your database for example for later use
 
 The methods you can use are the following:
 
-    $client->createUser('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat');
+    $client->createUser(array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
 
     $client->getUser('id');
 
     $client->getUserMe();
 
-    $client->putUser('id', 'email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat');
+    $client->putUser(array('id', 'email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
 
     $client->getCategories();
 
@@ -56,31 +56,33 @@ The methods you can use are the following:
 
     $client->getCategoryTemplates('category_name');
 
-    $client->getTemplates('page', 'per_page', 'order', 'dir');
+    $client->getTemplates(array('page', 'per_page', 'order', 'dir'));
 
     $client->getTemplate('slug');
 
-    $client->postZip('userId', 'file');
+    $client->postZip(array('userId', 'file'));
 
     $client->getUserTemplates('userId');
 
-    $client->getUserTemplate('userId', 'templateId');
+    $client->getUserTemplate(array('userId', 'templateId'));
 
-    $client->postUserTemplate('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category');
+    $client->postUserTemplate(array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
 
     $client->getUserPurchases('userId');
 
-    $client->getUserPurchase('userId', 'purchaseId');
+    $client->getUserPurchase(array('userId', 'purchaseId'));
 
-    $client->postUserPurchase('userId', 'coupon');
+    $client->postUserPurchase(array('userId', 'coupon'));
+    
+    $client->downloadUserPurchase(array('userId', 'purchaseId'));
 
-    $client->makePayment('userId', 'invoiceId', 'method', 'redirect_uri');
+    $client->makePayment(array('userId', 'invoiceId', 'method', 'redirect_uri'));
 
-    $client->putUserTemplate'userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category');
+    $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
 
-    $client->postCart('user', 'coupon', 'templates');
+    $client->postCart(array('user', 'coupon', 'templates'));
 
-    $client->putCart('id', 'coupon', 'templates');
+    $client->putCart(array('id', 'coupon', 'templates'));
 
     $client->deleteCart('id');
 
