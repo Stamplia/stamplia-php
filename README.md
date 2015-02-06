@@ -44,7 +44,7 @@ The methods you can use are the following:
 
     $client->createUser(array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
 
-    $client->getUser('id');
+    $client->getUser(array('id'));
 
     $client->getUserMe();
 
@@ -52,23 +52,23 @@ The methods you can use are the following:
 
     $client->getCategories();
 
-    $client->getCategory('name');
+    $client->getCategory(array('name'));
 
-    $client->getCategoryTemplates('category_name');
+    $client->getCategoryTemplates(array('category_name'));
 
     $client->getTemplates(array('page', 'per_page', 'order', 'dir'));
 
-    $client->getTemplate('slug');
+    $client->getTemplate(array('slug'));
 
     $client->postZip(array('userId', 'file'));
 
-    $client->getUserTemplates('userId');
+    $client->getUserTemplates(array('userId'));
 
     $client->getUserTemplate(array('userId', 'templateId'));
 
     $client->postUserTemplate(array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
 
-    $client->getUserPurchases('userId');
+    $client->getUserPurchases(array('userId'));
 
     $client->getUserPurchase(array('userId', 'purchaseId'));
 
@@ -80,13 +80,13 @@ The methods you can use are the following:
 
     $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
 
-    $client->postCart(array('user', 'coupon', 'templates'));
+    $client->postCart(array('id', 'coupon', 'templates'));
 
     $client->putCart(array('id', 'coupon', 'templates'));
 
-    $client->deleteCart('id');
+    $client->deleteCart(array('id'));
 
-    $client->getCart('id');
+    $client->getCart(array('id'));
 
 
 Please read http://dev.stamplia.com for the specific parameters that each method accepts and their results
