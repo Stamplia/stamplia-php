@@ -268,7 +268,7 @@ class Api {
             'postCart' => array(
                 'method' => 'post',
                 'url' => '/carts',
-                'parameters' => array('id', 'coupon', 'templates'),
+                'parameters' => array('user', 'coupon', 'templates'),
                 'namespace' => 'cart',
             ),
             'putCart' => array(
