@@ -48,7 +48,7 @@ The methods you can use are the following:
 
     $client->getUserMe();
 
-    $client->putUser(array('id', 'email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
+    $client->putUser(array('id', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
 
     $client->getCategories();
 
