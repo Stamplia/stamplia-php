@@ -249,8 +249,8 @@ class Api {
             
             'downloadUserPurchase' => array(
                 'method' => 'download',
-                'url' => '/users/{userId}/purchases/{purchaseId}.zip',
-                'parameters' => array('userId', 'purchaseId'),
+                'url' => '/users/{userId}/purchases/{purchaseId}.{format}',
+                'parameters' => array('userId', 'purchaseId', 'format'),
                 
             ),
             'postUserTemplate' => array(
@@ -427,7 +427,6 @@ class Api {
                             $url,
                             array(
                                 'Authorization' => 'Bearer '.$this->accessToken,
-                                'Accept' => 'application/zip',
                             ),
                             array(
                                 'query' => $data,
