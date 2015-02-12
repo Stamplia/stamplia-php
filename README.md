@@ -74,7 +74,7 @@ The methods you can use are the following:
 
     $client->postUserPurchase(array('userId', 'coupon'));
     
-    $client->downloadUserPurchase(array('userId', 'purchaseId'));
+    $client->downloadUserPurchase(array('userId', 'purchaseId', 'format'));
 
     $client->makePayment(array('userId', 'invoiceId', 'method', 'redirect_uri'));
 
