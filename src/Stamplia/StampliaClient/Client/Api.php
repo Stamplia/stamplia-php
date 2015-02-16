@@ -14,7 +14,7 @@ use Stamplia\StampliaClient\Provider\Stamplia;
 use Guzzle\Http\StaticClient as GuzzleClient;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
-use League\OAuth2\Client\Provider\IdentityProvider;
+use League\OAuth2\Client\Provider\ProviderInterface;
 
 use Guzzle\Http\Client;
 
@@ -32,7 +32,7 @@ class Api {
 
     protected $baseUrl;
 
-    public function __construct(AbstractProvider $provider, $accessToken = null, $domain = 'stamplia.com')
+    public function __construct(ProviderInterface $provider, $accessToken = null, $domain = 'stamplia.com')
     {
         $this->provider = $provider;
         $this->domain = $domain;
