@@ -9,7 +9,7 @@
 
 namespace Stamplia\StampliaClient\Provider;
 
-use League\OAuth2\Client\Provider\IdentityProvider;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use  League\OAuth2\Client\Provider\User;
 use League\OAuth2\Client\Token\AccessToken;
 use Guzzle\Service\Client as GuzzleClient;
@@ -17,7 +17,7 @@ use League\OAuth2\Client\Exception\IDPException as IDPException;
 use League\OAuth2\Client\Grant\GrantInterface;
 use Stamplia\StampliaClient\Grant\Refreshtoken;
 
-class Stamplia extends IdentityProvider{
+class Stamplia extends AbstractProvider{
 
     protected $domain = 'https://stamplia.com';
 
