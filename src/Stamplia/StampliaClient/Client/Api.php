@@ -202,7 +202,7 @@ class Api {
             ),
             'postZip' => array(
                 'method' => 'post',
-                'url' => '/users/{userId}/zip',
+                'url' => '/users/{userId}/zips',
                 'parameters' => array('userId', 'file'),
             ),
             'getUserTemplates' => array(
@@ -251,7 +251,7 @@ class Api {
                 'method' => 'download',
                 'url' => '/users/{userId}/purchases/{purchaseId}.{format}',
                 'parameters' => array('userId', 'purchaseId', 'format'),
-                
+
             ),
             'postUserTemplate' => array(
                 'method' => 'post',
