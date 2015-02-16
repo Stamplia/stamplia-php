@@ -32,7 +32,7 @@ class Api {
 
     protected $baseUrl;
 
-    public function __construct(IdentityProvider $provider, $accessToken = null, $domain = 'stamplia.com')
+    public function __construct(AbstractProvider $provider, $accessToken = null, $domain = 'stamplia.com')
     {
         $this->provider = $provider;
         $this->domain = $domain;
