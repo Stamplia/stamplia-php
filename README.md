@@ -54,7 +54,7 @@ The methods you can use are the following:
 
     $client->getCategory(array('name'));
 
-    $client->getCategoryTemplates(array('category_name'));
+    $client->getCategoryTemplates(array('name', 'page', 'per_page', 'order', 'dir'));
 
     $client->getTemplates(array('page', 'per_page', 'order', 'dir'));
 
