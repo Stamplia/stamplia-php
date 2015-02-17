@@ -244,7 +244,7 @@ class Api {
                 'method' => 'get',
                 'url' => '/users/{userId}/purchases/{purchaseId}',
                 'parameters' => array('userId', 'purchaseId'),
-                'namespace' => 'purchases',
+                'namespace' => 'purchase',
             ),
             
             'downloadUserPurchase' => array(
