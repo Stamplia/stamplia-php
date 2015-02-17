@@ -89,4 +89,4 @@ The methods you can use are the following:
     $client->getCart(array('id'));
 
 
-Please read http://dev.stamplia.com for the specific parameters that each method accepts and their results
+Please read http://api.stamplia.com/documentation/getting_started/ for the specific parameters that each method accepts and their results
