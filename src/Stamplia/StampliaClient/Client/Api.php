@@ -9,6 +9,7 @@
 
 namespace Stamplia\StampliaClient\Client;
 
+use Guzzle\Http\EntityBody;
 use Stamplia\StampliaClient\Exception\StampliaApiException;
 use Stamplia\StampliaClient\Provider\Stamplia;
 use Guzzle\Http\StaticClient as GuzzleClient;
@@ -201,7 +202,7 @@ class Api {
                 'namespace' => 'litmustests',
             ),
             'postZip' => array(
-                'method' => 'post',
+                'method' => 'upload',
                 'url' => '/users/{userId}/zips',
                 'parameters' => array('userId', 'file'),
             ),
@@ -260,7 +261,7 @@ class Api {
                 'namespace' => 'template',
             ),
             'putUserTemplate' => array(
-                'method' => 'post',
+                'method' => 'put',
                 'url' => '/users/{userId}/templates/{templateId}',
                 'parameters' => array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'),
                 'namespace' => 'template',
@@ -442,6 +443,18 @@ class Api {
                     }
                     
                     return $response->getBody();
+
+                case 'upload':
+                    $request = $client->post(
+                        $url,
+                        array(
+                            'Accept' => 'application/json',
+                            'Authorization' => 'Bearer '.$this->accessToken,
+                        ),
+                        array('file'=>'@'.$data['file'])
+                    );
+                    $response = $request->send();
+                    break;
                     
             }
 
