@@ -261,7 +261,7 @@ class Api {
                 'namespace' => 'template',
             ),
             'putUserTemplate' => array(
-                'method' => 'post',
+                'method' => 'put',
                 'url' => '/users/{userId}/templates/{templateId}',
                 'parameters' => array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'),
                 'namespace' => 'template',
