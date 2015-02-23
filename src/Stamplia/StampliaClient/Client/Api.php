@@ -145,7 +145,7 @@ class Api {
             'createUser' => array(
                 'method' => 'post',
                 'url' => '/users',
-                'parameters' => array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat', 'client_id'),
+                'parameters' => array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'user',
             ),
 

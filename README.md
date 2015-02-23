@@ -50,15 +50,17 @@ The methods you can use are the following:
 
     $client->putUser(array('id', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
 
-    $client->getCategories();
+    $client->getCategories(array('top_level'));
 
     $client->getCategory(array('name'));
 
     $client->getCategoryTemplates(array('name', 'page', 'per_page', 'order', 'dir'));
 
-    $client->getTemplates(array('page', 'per_page', 'order', 'dir'));
+    $client->getTemplates(array('page', 'per_page', 'order', 'dir', 'category'));
 
     $client->getTemplate(array('slug'));
+    
+    $client->getTemplateLitmustests(array('id'));
 
     $client->postZip(array('userId', 'file'));
 
@@ -77,6 +79,8 @@ The methods you can use are the following:
     $client->downloadUserPurchase(array('userId', 'purchaseId', 'format'));
 
     $client->makePayment(array('userId', 'invoiceId', 'method', 'redirect_uri'));
+    
+    $client->getPayment(array('userId', 'invoiceId'));
 
     $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
 
