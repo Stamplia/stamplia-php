@@ -42,7 +42,7 @@ Get the access token and save it to your database for example for later use
 
 The methods you can use are the following:
 
-    $client->createUser(array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat', 'client_id'));
+    $client->createUser(array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
 
     $client->getUser(array('id'));
 
