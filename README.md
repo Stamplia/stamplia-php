@@ -19,6 +19,10 @@ Add the following to your composer.json file
             "php": ">=5.3.3",
             "Stamplia/stamplia-php": "dev-master"
         },
+        "minimum-stability": "dev",
+        "config": {
+            "process-timeout": 3600
+        }
 
 Then in your PHP file, require the composer autoloader, something similar to this
 
