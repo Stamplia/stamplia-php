@@ -145,7 +145,7 @@ class Api {
             'createUser' => array(
                 'method' => 'post',
                 'url' => '/users',
-                'parameters' => array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'user',
             ),
 
@@ -162,7 +162,7 @@ class Api {
             'putUser' => array(
                 'method' => 'put',
                 'url' => '/users/{id}',
-                'parameters' => array('id', 'email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('id', 'email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'user',
             ),
             'getCategories' => array(
