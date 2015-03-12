@@ -257,13 +257,13 @@ class Api {
             'postUserTemplate' => array(
                 'method' => 'post',
                 'url' => '/users/{userId}/templates',
-                'parameters' => array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'),
+                'parameters' => array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'category'),
                 'namespace' => 'template',
             ),
             'putUserTemplate' => array(
                 'method' => 'put',
                 'url' => '/users/{userId}/templates/{templateId}',
-                'parameters' => array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'),
+                'parameters' => array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'category'),
                 'namespace' => 'template',
             ),
             'postCart' => array(

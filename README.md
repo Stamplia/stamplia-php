@@ -72,7 +72,7 @@ The methods you can use are the following:
 
     $client->getUserTemplate(array('userId', 'templateId'));
 
-    $client->postUserTemplate(array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
+    $client->postUserTemplate(array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'category'));
 
     $client->getUserPurchases(array('userId'));
 
@@ -86,7 +86,7 @@ The methods you can use are the following:
     
     $client->getPayment(array('userId', 'invoiceId'));
 
-    $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
+    $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'category'));
 
     $client->postCart(array('user', 'coupon', 'templates'));
 
