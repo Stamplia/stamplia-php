@@ -251,7 +251,7 @@ class Api {
             'downloadUserPurchase' => array(
                 'method' => 'download',
                 'url' => '/users/{userId}/purchases/{purchaseId}.{format}',
-                'parameters' => array('userId', 'purchaseId', 'format'),
+                'parameters' => array('userId', 'purchaseId', 'format', 'provider'),
 
             ),
             'postUserTemplate' => array(
