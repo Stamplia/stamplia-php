@@ -57,6 +57,10 @@ The methods you can use are the following:
     $client->getCategories(array('top_level'));
 
     $client->getCategory(array('name'));
+    
+    $client->getThemes();
+    
+    $client->getTheme(array('name'));
 
     $client->getCategoryTemplates(array('name', 'page', 'per_page', 'order', 'dir'));
 
