@@ -62,9 +62,11 @@ The methods you can use are the following:
     
     $client->getTheme(array('name'));
 
-    $client->getCategoryTemplates(array('name', 'page', 'per_page', 'order', 'dir'));
+    $client->getCategoryTemplates(array('name', 'page', 'per_page', 'order', 'dir', 'theme'));
+    
+    $client->getThemeTemplates(array('name', 'page', 'per_page', 'order', 'dir', 'category'));
 
-    $client->getTemplates(array('page', 'per_page', 'order', 'dir', 'category'));
+    $client->getTemplates(array('page', 'per_page', 'order', 'dir', 'category', 'theme'));
 
     $client->getTemplate(array('slug'));
     
