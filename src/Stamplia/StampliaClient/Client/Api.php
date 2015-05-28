@@ -29,7 +29,7 @@ class Api {
     protected $allowedMethods;
     protected $domain;
     protected $protocol = 'https';
-    protected $apiUrl = '/api';
+    protected $apiUrl = '/v1';
 
     protected $baseUrl;
 
@@ -37,6 +37,7 @@ class Api {
     {
         $this->provider = $provider;
         $this->domain = $domain;
+        $this->allowedMethods = $this->getPublicAllowedMethods();
     }
 
     public function getAccessToken()
@@ -64,11 +65,13 @@ class Api {
         return $this->accessTokenExpires;
     }
 
+
     public function setAccessToken($accessToken = null, $expires = null, $refreshToken = null)
     {
         $this->accessToken = $accessToken;
         $this->accessTokenExpires = $expires;
         $this->refreshToken = $refreshToken;
+
 
         if(!$this->accessToken) {
             if ( ! isset($_GET['code'])) {
@@ -106,69 +109,41 @@ class Api {
         }
     }
 
-    public function login($data = array()) {
-        $client = new Client($this->getBaseUrl());
-
-        $data["client_id"] = $this->provider->clientId;
-        $data["client_secret"] = $this->provider->clientSecret;
-        $data["grant_type"] = "password";
-
-        $client->setSslVerification(false);
-
-        $request = $client->post(
-            '/oauth/v2/token',
-            array(
-
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ),
-            json_encode($data),
-            array(
-
-                'debug' => false,
-            )
-        );
-        $response = $request->send();
-
-        $body = $response->getBody();
-        $a = $body->__toString();
-        $r = json_decode($a);
-
-        $this->setAccessToken($r->access_token, $r->expires_in + time(), $r->refresh_token);
-
-        return $r;
-
+    public function getAllowedMethods() {
+        return $this->allowedMethods;
     }
-
-    public function getAllowedMethods(){
+    public function addAllowedMethods(array $methods) {
+        $this->allowedMethods = array_merge($this->allowedMethods, $methods);
+    }
+    protected function getPublicAllowedMethods() {
         return array(
-            'createUser' => array(
+            'signup' => array(
                 'method' => 'post',
-                'url' => '/users',
+                'url' => '/signup',
                 'parameters' => array('email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'user',
             ),
-
+            'login' => array(
+                'method' => 'post',
+                'url' => '/login',
+                'parameters' => array('email', 'password', 'app_id', 'app_secret'),
+            ),
             'getUser' => array(
                 'method' => 'get',
-                'url' => '/users/{id}',
-                'parameters' => array('id'),
-                'namespace' => 'user',
-            ),
-            'getUserMe' => array(
-                'method' => 'get',
-                'url' => '/users/me',
+                'url' => '/user/profile',
+                'parameters' => array(),
+                'namespace' => 'profile',
             ),
             'putUser' => array(
                 'method' => 'put',
-                'url' => '/users/{id}',
-                'parameters' => array('id', 'email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
-                'namespace' => 'user',
+                'url' => '/user/profile',
+                'parameters' => array('email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'namespace' => 'profile',
             ),
             'getCategories' => array(
                 'method' => 'get',
                 'url' => '/categories',
-                'parameters' => array('top_level'),
+                'parameters' => array(),
                 'namespace' => 'categories',
             ),
             'getCategory' => array(
@@ -204,109 +179,72 @@ class Api {
             'getTemplates' => array(
                 'method' => 'get',
                 'url' => '/templates',
-                'parameters' => array('page', 'per_page', 'order', 'dir', 'category', 'theme'),
+                'parameters' => array('page', 'per_page', 'order', 'dir', 'category', 'theme', 'creator'),
                 'namespace' => 'templates',
             ),
             'getTemplate' => array(
                 'method' => 'get',
-                'url' => '/templates/{slug}',
-                'parameters' => array('slug'),
+                'url' => '/templates/{templateId}',
+                'parameters' => array('templateId'),
                 'namespace' => 'template',
             ),
             'getTemplateLitmustests' => array(
                 'method' => 'get',
-                'url' => '/templates/{id}/litmustests',
-                'parameters' => array('id'),
+                'url' => '/litmustests/{templateId}',
+                'parameters' => array('templateId'),
                 'namespace' => 'litmustests',
             ),
-            'postZip' => array(
-                'method' => 'upload',
-                'url' => '/users/{userId}/zips',
-                'parameters' => array('userId', 'file'),
+            'getUserTemplateLitmustests' => array(
+                'method' => 'get',
+                'url' => '/user/litmustests/{templateId}',
+                'parameters' => array('templateId'),
+                'namespace' => 'litmustests',
             ),
             'getUserTemplates' => array(
                 'method' => 'get',
-                'url' => '/users/{userId}/templates',
-                'parameters' => array('userId'),
+                'url' => '/user/templates',
+                'parameters' => array('approved', 'draft', 'page', 'order', 'per_page', 'dir'),
                 'namespace' => 'templates',
             ),
             'getUserTemplate' => array(
                 'method' => 'get',
-                'url' => '/users/{userId}/templates/{templateId}',
-                'parameters' => array('userId', 'templateId'),
+                'url' => '/user/templates/{templateId}',
+                'parameters' => array('templateId'),
                 'namespace' => 'template',
             ),
             'getUserPurchases' => array(
                 'method' => 'get',
-                'url' => '/users/{userId}/purchases',
-                'parameters' => array('userId'),
+                'url' => '/user/purchases',
+                'parameters' => array(),
                 'namespace' => 'purchases',
-            ),
-                     
-            'postUserPurchases' => array(
-                'method' => 'post',
-                'url' => '/users/{userId}/purchases',
-                'parameters' => array('userId', 'coupon'),
-                'namespace' => 'purchase',
-            ),
-            'makePayment' => array(
-                'method' => 'post',
-                'url' => '/users/{userId}/invoices/{invoiceId}/payments',
-                'parameters' => array('userId', 'invoiceId', 'method', 'redirect_uri'),
-            ),
-            'getPayment' => array(
-                'method' => 'get',
-                'url' => '/users/{userId}/invoices/{invoiceId}/payments',
-                'parameters' => array('userId', 'invoiceId'),
             ),
             'getUserPurchase' => array(
                 'method' => 'get',
-                'url' => '/users/{userId}/purchases/{purchaseId}',
-                'parameters' => array('userId', 'purchaseId'),
+                'url' => '/user/purchases/{purchaseId}',
+                'parameters' => array('purchaseId', 'provider'),
                 'namespace' => 'purchase',
             ),
-            
             'downloadUserPurchase' => array(
                 'method' => 'download',
-                'url' => '/users/{userId}/purchases/{purchaseId}.{format}',
-                'parameters' => array('userId', 'purchaseId', 'format'),
-
+                'url' => '/user/purchases/{purchaseId}.{format}',
+                'parameters' => array('purchaseId', 'format', 'provider'),
             ),
-            'postUserTemplate' => array(
+            'postUserPaypalOrder'=> array(
                 'method' => 'post',
-                'url' => '/users/{userId}/templates',
-                'parameters' => array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'category', 'theme'),
-                'namespace' => 'template',
+                'url' => '/user/paypal/order',
+                'parameters' => array('templates', 'packs', 'coupon', 'credit', 'url_redirect', 'url_canceled'),
             ),
-            'putUserTemplate' => array(
-                'method' => 'put',
-                'url' => '/users/{userId}/templates/{templateId}',
-                'parameters' => array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'category', 'theme'),
-                'namespace' => 'template',
-            ),
-            'postCart' => array(
+            'postUserPaypalPurchase'=> array(
                 'method' => 'post',
-                'url' => '/carts',
-                'parameters' => array('user', 'coupon', 'templates'),
-                'namespace' => 'cart',
+                'url' => '/user/paypal/purchase',
+                'parameters' => array('token'),
+                'namespace' => 'invoice',
             ),
-            'putCart' => array(
-                'method' => 'put',
-                'url' => '/carts/{id}',
-                'parameters' => array('id', 'coupon', 'templates'),
-                'namespace' => 'cart',
-            ),
-            'deleteCart' => array(
-                'method' => 'delete',
-                'url' => '/carts/{id}',
-                'parameters' => array('id'),
-                'namespace' => 'cart',
-            ),
-            'getCart' => array(
-                'method' => 'get',
-                'url' => '/carts/{id}',
-                'parameters' => array('id'),
-                'namespace' => 'cart',
+            'postUserThirdpartyPurchase'=> array(
+                'method' => 'post',
+                'url' => '/user/thirdparty/purchase',
+                'parameters' => array('templates', 'packs'),
+                'namespace' => 'invoice',
             ),
         );
     }
@@ -318,14 +256,17 @@ class Api {
         }
 
         $anonymousActions = array(
-            'createUser',
+            'signup',
+            'login',
             'getTemplates',
             'getTemplateLitmustests',
             'getTemplate',
             'getCategories',
             'getCategory',
-
             'getCategoryTemplates',
+            'getTheme',
+            'getThemes',
+            'getThemeTemplates'
         );
 
         $action = $methods[$name];
@@ -373,6 +314,7 @@ class Api {
 
             $client->setSslVerification(false);
             $url = $relativeUrl ? $url : $this->apiUrl.$url;
+
             switch (strtolower($method)) {
                 case 'get':
 //                    $query = array_merge($data, array('access_token' => $this->accessToken));
@@ -438,8 +380,8 @@ class Api {
                     );
                     $response = $request->send();
                     break;
-                    
-                
+
+
                 case 'download':
                     try {
                         $request = $client->get(
@@ -455,11 +397,12 @@ class Api {
                         $response = $request->send();
                     } catch(\Guzzle\Http\Exception\BadResponseException $e) {
                         $raw_response = explode("\n", $e->getResponse());
+                        var_dump($raw_response); die();
                         throw new StampliaApiException(end($raw_response));
                     } catch(\Exception $e) {
                         throw new StampliaApiException($e->getMessage());
                     }
-                    
+
                     return $response->getBody();
 
                 case 'upload':
@@ -473,18 +416,22 @@ class Api {
                     );
                     $response = $request->send();
                     break;
-                    
-            }
 
+            }
 
             $body = $response->getBody();
             $a = $body->__toString();
             $r = json_decode($a);
 
+            if($url == $this->apiUrl.'/login') {
+                $this->setAccessToken($r->access_token, $r->expires_in + time(), $r->refresh_token);
+            }
+
             if($namespace && !isset($r->count)) {
 
                 return $r->{$namespace};
             }
+
             return $r;
 
         } catch (\Guzzle\Http\Exception\BadResponseException $e) {
@@ -548,6 +495,5 @@ class Api {
     {
         return $this->protocol.'://'.$this->domain.$this->apiUrl;
     }
-
 
 }
