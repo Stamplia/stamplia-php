@@ -120,7 +120,7 @@ class Api {
             'signup' => array(
                 'method' => 'post',
                 'url' => '/signup',
-                'parameters' => array('email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('email', 'name', 'fullname', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'user',
             ),
             'login' => array(
@@ -137,7 +137,7 @@ class Api {
             'putUser' => array(
                 'method' => 'put',
                 'url' => '/user/profile',
-                'parameters' => array('email', 'alias', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('email', 'name', 'fullname', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'profile',
             ),
             'getCategories' => array(
