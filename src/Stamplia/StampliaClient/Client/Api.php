@@ -140,6 +140,16 @@ class Api {
                 'parameters' => array('email', 'name', 'fullname', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'profile',
             ),
+            'requestPasswordReset'=> array(
+                'method' => 'post',
+                'url' => '/request-password-reset',
+                'parameters' => array('email'),
+            ),
+            'resetPassword'=> array(
+                'method' => 'post',
+                'url' => '/reset-password',
+                'parameters' => array('token', 'password'),
+            ),
             'getCategories' => array(
                 'method' => 'get',
                 'url' => '/categories',
@@ -258,6 +268,8 @@ class Api {
         $anonymousActions = array(
             'signup',
             'login',
+            'requestPasswordReset',
+            'resetPassword',
             'getTemplates',
             'getTemplateLitmustests',
             'getTemplate',
