@@ -153,7 +153,7 @@ class Api {
             'getCategories' => array(
                 'method' => 'get',
                 'url' => '/categories',
-                'parameters' => array(),
+                'parameters' => array('page', 'per_page', 'order', 'dir', 'hideEmpty', 'theme'),
                 'namespace' => 'categories',
             ),
             'getCategory' => array(
@@ -165,7 +165,7 @@ class Api {
             'getThemes' => array(
                 'method' => 'get',
                 'url' => '/themes',
-                'parameters' => array(''),
+                'parameters' => array('page', 'per_page', 'order', 'dir', 'hideEmpty', 'category'),
                 'namespace' => 'themes',
             ),
             'getTheme' => array(
