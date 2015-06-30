@@ -8,7 +8,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "league/oauth2-client": "dev-master"
+        "league/oauth2-client": "0.12.*"
     },
 
     "minimum-stability": "dev",
