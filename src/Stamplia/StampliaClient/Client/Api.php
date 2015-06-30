@@ -135,7 +135,7 @@ class Api {
                 'namespace' => 'profile',
             ),
             'putUser' => array(
-                'method' => 'put',
+                'method' => 'patch',
                 'url' => '/user/profile',
                 'parameters' => array('email', 'name', 'fullname', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
                 'namespace' => 'profile',
@@ -328,6 +328,7 @@ class Api {
             $url = $relativeUrl ? $url : $this->apiUrl.$url;
 
             switch (strtolower($method)) {
+                
                 case 'get':
 //                    $query = array_merge($data, array('access_token' => $this->accessToken));
                     $request = $client->get(
@@ -362,6 +363,22 @@ class Api {
                     break;
                 case 'put':
                     $request = $client->put(
+                        $url,
+                        array(
+                            'Authorization' => 'Bearer '.$this->accessToken,
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ),
+                        json_encode($data),
+                        array(
+//                            'query' => array('access_token' => $this->accessToken),
+                            'debug' => false,
+                        )
+                    );
+                    $response = $request->send();
+                    break;
+                case 'patch':
+                    $request = $client->patch(
                         $url,
                         array(
                             'Authorization' => 'Bearer '.$this->accessToken,
