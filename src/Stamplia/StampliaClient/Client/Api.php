@@ -174,18 +174,6 @@ class Api {
                 'parameters' => array('name'),
                 'namespace' => 'theme',
             ),
-            'getCategoryTemplates' => array(
-                'method' => 'get',
-                'url' => '/categories/{name}/templates',
-                'parameters' => array('name', 'page', 'per_page', 'order', 'dir', 'theme'),
-                'namespace' => 'templates',
-            ),
-            'getThemeTemplates' => array(
-                'method' => 'get',
-                'url' => '/themes/{name}/templates',
-                'parameters' => array('name', 'page', 'per_page', 'order', 'dir', 'category'),
-                'namespace' => 'templates',
-            ),
             'getTemplates' => array(
                 'method' => 'get',
                 'url' => '/templates',
