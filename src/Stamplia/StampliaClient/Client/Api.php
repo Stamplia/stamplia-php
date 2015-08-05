@@ -120,7 +120,7 @@ class Api {
             'signup' => array(
                 'method' => 'post',
                 'url' => '/signup',
-                'parameters' => array('email', 'name', 'fullname', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('email', 'name', 'fullname', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'city', 'avatar', 'vat'),
                 'namespace' => 'user',
             ),
             'login' => array(
@@ -135,9 +135,15 @@ class Api {
                 'namespace' => 'profile',
             ),
             'putUser' => array(
+                'method' => 'put',
+                'url' => '/user/profile',
+                'parameters' => array('email', 'name', 'fullname', 'type', 'password', 'old_password','paypal_email', 'company','address', 'zip', 'country', 'city','avatar', 'vat'),
+                'namespace' => 'profile',
+            ),
+            'patchUser' => array(
                 'method' => 'patch',
                 'url' => '/user/profile',
-                'parameters' => array('email', 'name', 'fullname', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'),
+                'parameters' => array('email', 'name', 'fullname', 'type', 'password', 'old_password','paypal_email', 'company','address', 'zip', 'country', 'city','avatar', 'vat'),
                 'namespace' => 'profile',
             ),
             'requestPasswordReset'=> array(
@@ -316,7 +322,7 @@ class Api {
             $url = $relativeUrl ? $url : $this->apiUrl.$url;
 
             switch (strtolower($method)) {
-                
+
                 case 'get':
 //                    $query = array_merge($data, array('access_token' => $this->accessToken));
                     $request = $client->get(
@@ -326,7 +332,6 @@ class Api {
                             'Accept' => 'application/json',
                         ),
                         array(
-
                             'query' => $data,
                             'debug' => false,
                         )
@@ -414,7 +419,6 @@ class Api {
                         $response = $request->send();
                     } catch(\Guzzle\Http\Exception\BadResponseException $e) {
                         $raw_response = explode("\n", $e->getResponse());
-                        var_dump($raw_response); die();
                         throw new StampliaApiException(end($raw_response));
                     } catch(\Exception $e) {
                         throw new StampliaApiException($e->getMessage());
