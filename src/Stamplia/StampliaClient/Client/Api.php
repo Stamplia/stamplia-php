@@ -183,7 +183,7 @@ class Api {
             'getTemplates' => array(
                 'method' => 'get',
                 'url' => '/templates',
-                'parameters' => array('page', 'per_page', 'order', 'dir', 'category', 'theme', 'creator'),
+                'parameters' => array('page', 'per_page', 'order', 'dir', 'category', 'theme', 'creator', 'compatible'),
                 'namespace' => 'templates',
             ),
             'getTemplate' => array(
