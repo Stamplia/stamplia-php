@@ -1,17 +1,17 @@
 {
     "name": "stamplia/stamplia-php",
     "description": "A PHP client for the Stamplia API",
+    "license": "MIT",
     "autoload": {
         "psr-0": { "": "src/" }
     },
     "repositories": [
     ],
     "require": {
-        "php": ">=5.3.3",
-        "league/oauth2-client": "0.12.*"
+        "php": ">=5.4.0",
+        "league/oauth2-client": "0.*"
     },
-
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "config": {
         "process-timeout": 3600
     }
