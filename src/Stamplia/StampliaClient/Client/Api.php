@@ -16,11 +16,11 @@ use Guzzle\Http\StaticClient as GuzzleClient;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
 use League\OAuth2\Client\Provider\ProviderInterface;
-
 use Guzzle\Http\Client;
 
 
 class Api {
+
     protected $provider;
     protected $accessToken;
     protected $refreshToken;
@@ -65,56 +65,59 @@ class Api {
         return $this->accessTokenExpires;
     }
 
-
     public function setAccessToken($accessToken = null, $expires = null, $refreshToken = null)
     {
         $this->accessToken = $accessToken;
         $this->accessTokenExpires = $expires;
         $this->refreshToken = $refreshToken;
 
-
-        if(!$this->accessToken) {
-            if ( ! isset($_GET['code'])) {
+        if (!$this->accessToken) {
+            if (!isset($_GET['code'])) {
                 // If we don't have an authorization code then get one
                 $this->provider->authorize();
             } else {
                 try {
                     // Try to get an access token (using the authorization code grant)
-
                     $tokens = $this->provider->getAccessToken('authorization_code', array('code' => $_GET['code']));
 
                     $this->accessToken = $tokens->accessToken;
                     $this->accessTokenExpires = $tokens->expires;
                     $this->refreshToken = $tokens->refreshToken;
-                    //TODO save the access token in your database
-
                 } catch (\Exception $e) {
                     echo 'Failed to get access token '.$e->getMessage();
                 }
             }
-        }elseif($this->accessTokenExpires <= time()) { //token is expired, get a new one from refresh token
+        } elseif ($this->accessTokenExpires <= time()) { //token is expired, get a new one from refresh token
             try {
                 // Try to get an access token (using the refresh token grant)
-
                 $tokens = $this->provider->refreshAccessToken('refresh_token', array('refresh_token' => $this->refreshToken));
 
                 $this->accessToken = $tokens->accessToken;
                 $this->accessTokenExpires = $tokens->expires;
                 $this->refreshToken = $tokens->refreshToken;
-                //TODO save the access tokens in your database
-
             } catch (\Exception $e) {
                 echo 'Failed to get access token '.$e->getMessage();
             }
         }
     }
 
+    /**
+     * @return array
+     */
     public function getAllowedMethods() {
         return $this->allowedMethods;
     }
+
+    /**
+     * @param array $methods
+     */
     public function addAllowedMethods(array $methods) {
         $this->allowedMethods = array_merge($this->allowedMethods, $methods);
     }
+
+    /**
+     * @return array
+     */
     protected function getPublicAllowedMethods() {
         return array(
             'signup' => array(
@@ -192,18 +195,6 @@ class Api {
                 'parameters' => array('templateId'),
                 'namespace' => 'template',
             ),
-            'getTemplateLitmustests' => array(
-                'method' => 'get',
-                'url' => '/litmustests/{templateId}',
-                'parameters' => array('templateId'),
-                'namespace' => 'litmustests',
-            ),
-            'getUserTemplateLitmustests' => array(
-                'method' => 'get',
-                'url' => '/user/litmustests/{templateId}',
-                'parameters' => array('templateId'),
-                'namespace' => 'litmustests',
-            ),
             'getUserTemplates' => array(
                 'method' => 'get',
                 'url' => '/user/templates',
@@ -219,7 +210,7 @@ class Api {
             'getUserPurchases' => array(
                 'method' => 'get',
                 'url' => '/user/purchases',
-                'parameters' => array(),
+                'parameters' => array('page', 'per_page', 'order', 'dir'),
                 'namespace' => 'purchases',
             ),
             'getUserPurchase' => array(
@@ -253,9 +244,11 @@ class Api {
         );
     }
 
-    public function __call($name, $arguments) {
+    public function __call($name, $arguments)
+    {
         $methods = $this->getAllowedMethods();
-        if(!isset($methods[$name])) {
+
+        if (!isset($methods[$name])) {
             throw new StampliaApiException('Method '.$name.' is not supported');
         }
 
@@ -277,17 +270,17 @@ class Api {
 
         $action = $methods[$name];
 
-        if(!$this->accessToken && !in_array($name, $anonymousActions)) {
+        if (!$this->accessToken && !in_array($name, $anonymousActions)) {
             $this->setAccessToken();
         }
 
         $data = array();
         $namespace = null;
-        if(isset($action['namespace'])) {
+        if (isset($action['namespace'])) {
             $namespace = $action['namespace'];
         }
 
-        if(isset($arguments[0]) && is_array($arguments[0])) {
+        if (isset($arguments[0]) && is_array($arguments[0])) {
             $parameters = $arguments[0];
 
             foreach($parameters as $key => $val) {
@@ -302,29 +295,34 @@ class Api {
             }
         }
 
-        if($name == 'createUser') {
+        if ($name == 'createUser') {
             $data['client_id'] = $this->provider->clientId;
         }
-
-        //TODO replace parameters in URL
 
         $url = $action['url'];
 
         return $this->request($action['method'], $url, $data, $namespace);
     }
 
-    public function request($method, $url, $data = null, $namespace = null, $relativeUrl = false) {
+    /**
+     * @param $method
+     * @param $url
+     * @param null $data
+     * @param null $namespace
+     * @param bool|false $relativeUrl
+     * @return mixed
+     * @throws StampliaApiException
+     */
+    public function request($method, $url, $data = null, $namespace = null, $relativeUrl = false)
+    {
         try {
-
             $client = new Client($this->getBaseUrl());
 
             $client->setSslVerification(false);
             $url = $relativeUrl ? $url : $this->apiUrl.$url;
 
             switch (strtolower($method)) {
-
                 case 'get':
-//                    $query = array_merge($data, array('access_token' => $this->accessToken));
                     $request = $client->get(
                         $url,
                         array(
@@ -348,7 +346,6 @@ class Api {
                         ),
                         json_encode($data),
                         array(
-//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
@@ -364,7 +361,6 @@ class Api {
                         ),
                         json_encode($data),
                         array(
-//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
@@ -380,7 +376,6 @@ class Api {
                         ),
                         json_encode($data),
                         array(
-//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
@@ -396,14 +391,11 @@ class Api {
                         ),
                         null,
                         array(
-//                            'query' => array('access_token' => $this->accessToken),
                             'debug' => false,
                         )
                     );
                     $response = $request->send();
                     break;
-
-
                 case 'download':
                     try {
                         $request = $client->get(
@@ -423,9 +415,7 @@ class Api {
                     } catch(\Exception $e) {
                         throw new StampliaApiException($e->getMessage());
                     }
-
                     return $response->getBody();
-
                 case 'upload':
                     $request = $client->post(
                         $url,
@@ -437,14 +427,13 @@ class Api {
                     );
                     $response = $request->send();
                     break;
-
             }
 
             $body = $response->getBody();
             $a = $body->__toString();
             $r = json_decode($a);
 
-            if($url == $this->apiUrl.'/login') {
+            if ($url == $this->apiUrl.'/login') {
                 $this->setAccessToken($r->access_token, $r->expires_in + time(), $r->refresh_token);
             }
 
@@ -460,7 +449,6 @@ class Api {
             throw new StampliaApiException(end($raw_response));
         }
     }
-
 
     /**
      * @param string $apiUrl
@@ -509,6 +497,7 @@ class Api {
     {
         return $this->protocol;
     }
+
     /**
      * @return string
      */
