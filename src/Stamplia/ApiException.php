@@ -30,6 +30,6 @@ class ApiException extends \Exception
 
     public function __toString()
     {
-        return strtoupper($this->method) . ' ' .$this->url. ' returned '.$this->code;
+        return strtoupper($this->method) . ' ' .$this->url. ' returned error '.$this->code. ': '.$this->getMessage();
     }
 }
