@@ -259,26 +259,16 @@ class ApiClient {
 
             $method = strtolower($method);
 
-            $parameters = array();
+            // returns the raw body
+            if ($method === 'download') {
+                return $this->processDownload($client, $url, $data, $anonymous);
+            }
+
+            $parameters = [ 'Accept' => 'application/json' ];
             if (!$anonymous) {
                 $parameters['Authorization'] = 'Bearer '.$this->accessToken;
             }
             $options = [ 'debug' => false ];
-
-            // returns the raw body
-            if ($method === 'download') {
-                $options['query'] = $data;
-                try {
-                    $request = $client->get($url, $parameters, $options);
-                    $response = $request->send();
-                } catch (BadResponseException $e) {
-                    throw new ApiException($e->getMessage(), $e->getCode(), $url, $method, $e->getResponse());
-                }
-
-                return $response->getBody();
-            }
-
-            $parameters['Accept'] = 'application/json';
 
             $payload = null;
             if ($method === 'get' || $method === 'upload') {
@@ -288,36 +278,14 @@ class ApiClient {
                     if (!isset($data['file'])) {
                         throw new \Exception('This method requires a file parameter');
                     }
-                    $payload =  [ 'file' => '@' . $data['file'] ];
+                    $payload = [ 'file' => '@' . $data['file'] ];
                 }
             } else {
                 $parameters['Content-Type'] = 'application/json';
                 $payload = json_encode($data);
             }
 
-            switch ($method) {
-                case 'get':
-                    $request = $client->get($url, $parameters, $options);
-                    break;
-                case 'post':
-                case 'upload':
-                    $request = $client->post($url, $parameters, $payload, $options);
-                    break;
-                case 'put':
-                    $request = $client->put($url, $parameters, $payload, $options);
-                    break;
-                case 'patch':
-                    $request = $client->patch($url, $parameters, $payload, $options);
-                    break;
-                case 'delete':
-                    $request = $client->delete($url, $parameters, $payload, $options);
-                    break;
-                default:
-                    throw new \Exception('Invalid method');
-                    break;
-            }
-
-            $response = $request->send();
+            $response = $this->executeRequest($client, $method, $url, $parameters, $options, $payload);
 
             $content = $response->getBody(true);
 
@@ -370,9 +338,74 @@ class ApiClient {
         $this->accessToken = $accessToken;
         $this->accessTokenExpires = $expires;
         $this->refreshToken = $refreshToken;
-
-        if ($this->accessTokenExpires && $this->accessTokenExpires <= time()) {
-            //TODO: refresh token
-        }
     }
+
+
+
+    /**
+     * @param Client $client
+     * @param string $method
+     * @param string $url
+     * @param array $parameters
+     * @param array $options
+     * @param string|null $payload
+     * @return \Guzzle\Http\Message\Response
+     * @throws \Exception
+     */
+    protected function executeRequest(Client $client, $method, $url, array $parameters, array $options, $payload = null)
+    {
+        switch ($method) {
+            case 'get':
+                $request = $client->get($url, $parameters, $options);
+                break;
+            case 'post':
+            case 'upload':
+                $request = $client->post($url, $parameters, $payload, $options);
+                break;
+            case 'put':
+                $request = $client->put($url, $parameters, $payload, $options);
+                break;
+            case 'patch':
+                $request = $client->patch($url, $parameters, $payload, $options);
+                break;
+            case 'delete':
+                $request = $client->delete($url, $parameters, $payload, $options);
+                break;
+            default:
+                throw new \Exception('Invalid method');
+                break;
+        }
+
+        return $request->send();
+    }
+
+    /**
+     * @param Client $client
+     * @param string $url
+     * @param array|null $data
+     * @param bool|false $anonymous
+     * @return \Guzzle\Http\EntityBodyInterface|string
+     * @throws ApiException
+     */
+    protected function processDownload(Client $client, $url, array $data = null, $anonymous = false)
+    {
+        $parameters = [];
+        if (!$anonymous) {
+            $parameters['Authorization'] = 'Bearer '.$this->accessToken;
+        }
+        $options = [
+            'debug' => false,
+            'query' => $data
+        ];
+
+        // returns the raw body
+        try {
+            $response = $client->get($url, $parameters, $options)->send();
+        } catch (BadResponseException $e) {
+            throw new ApiException($e->getMessage(), $e->getCode(), $url, 'download', $e->getResponse());
+        }
+
+        return $response->getBody();
+    }
+
 }
