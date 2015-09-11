@@ -1,4 +1,4 @@
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209/big.png)](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209/big.png)](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209) [ ![Codeship Status for Stamplia/stamplia-php](https://codeship.com/projects/f74ee750-3a90-0133-ea16-2693e5cde95b/status?branch=feature/v2)](https://codeship.com/projects/101917)
 
 stamplia-php
 ============
