@@ -1,3 +1,5 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209/big.png)](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209)
+
 stamplia-php
 ============
 
