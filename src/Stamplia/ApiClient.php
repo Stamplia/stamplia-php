@@ -44,7 +44,7 @@ class ApiClient {
             'signup' => [
                 'method'        => 'post',
                 'url'           => '/signup',
-                'parameters'    => ['email', 'name', 'fullname', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'city', 'avatar', 'vat'],
+                'parameters'    => ['email', 'name', 'fullname', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'city', 'avatar', 'vat'],
                 'namespace'     => 'user',
                 'anonymous'     => true,
                 'description'   => 'Creates a new user account'
@@ -67,7 +67,7 @@ class ApiClient {
             'putUser' => [
                 'method'        => 'put',
                 'url'           => '/user/profile',
-                'parameters'    => ['email', 'name', 'fullname', 'type', 'password', 'old_password','paypal_email', 'company','address', 'zip', 'country', 'city','avatar', 'vat'],
+                'parameters'    => ['email', 'name', 'fullname', 'password', 'old_password','paypal_email', 'company','address', 'zip', 'country', 'city','avatar', 'vat'],
                 'namespace'     => 'profile',
                 'anonymous'     => false,
                 'description'   => 'Replaces a user profile'
@@ -75,7 +75,7 @@ class ApiClient {
             'patchUser' => [
                 'method'        => 'patch',
                 'url'           => '/user/profile',
-                'parameters'    => ['email', 'name', 'fullname', 'type', 'password', 'old_password','paypal_email', 'company','address', 'zip', 'country', 'city','avatar', 'vat'],
+                'parameters'    => ['email', 'name', 'fullname', 'password', 'old_password','paypal_email', 'company','address', 'zip', 'country', 'city','avatar', 'vat'],
                 'namespace'     => 'profile',
                 'anonymous'     => false,
                 'description'   => 'Modifies a user profile'
