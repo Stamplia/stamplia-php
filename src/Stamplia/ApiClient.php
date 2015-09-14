@@ -14,7 +14,7 @@ use Guzzle\Http\Client;
 class ApiClient {
 
     const DEFAULT_API_VERSION     = 'v1';
-    const DEFAULT_DOMAIN          = 'api.beta.stamplia.com';
+    const DEFAULT_DOMAIN          = 'api.stamplia.com';
     const DEFAULT_PROTOCOL        = 'https';
 
     const SSL_CERTIFICATE_CHECK   = false;
