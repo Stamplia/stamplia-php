@@ -1,100 +1,62 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209/big.png)](https://insight.sensiolabs.com/projects/35802256-2d93-489b-bf26-42ef3880b209) [ ![Codeship Status for Stamplia/stamplia-php](https://codeship.com/projects/f74ee750-3a90-0133-ea16-2693e5cde95b/status?branch=master)](https://codeship.com/projects/101917)
+
 stamplia-php
 ============
 
-A PHP library to access the stamplia API
+A PHP library to access the [Stamplia](https://stamplia.com) API. It requires PHP 5.4+.
 
+
+Setup
+-----
+
+Using [composer](https://getcomposer.org) you can add the following to your composer.json file:
+
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Stamplia/stamplia-php.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "Stamplia/stamplia-php": "~1.0"
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "process-timeout": 3600
+    }
+
+Then in your PHP code include the composer autoloader, something similar to this:
+
+    <?php
+    require_once 'vendor/autoload.php';
 
 Usage
 -----
 
-Add the following to your composer.json file
+To instantiate the client it's pretty straightforward:
 
-        "repositories": [
-            {
-                "type": "vcs",
-                "url": "https://github.com/Stamplia/stamplia-php.git"
-            }
-        ],
-        "require": {
-            "php": ">=5.3.3",
-            "Stamplia/stamplia-php": "dev-master"
-        },
-        "minimum-stability": "dev",
-        "config": {
-            "process-timeout": 3600
-        }
+    $client = new \Stamplia\ApiClient();
 
-Then in your PHP file, require the composer autoloader, something similar to this
+Here's how to list templates available on our marketplace:
 
-    <?php
-    require('vendor/autoload.php');
+    $templates = $client->getTemplates();
 
-You can then create a OAuth provider with your app data, create a new API client, and use it:
+All method parameters need to be set within a single array as the function parameter.
 
-    $provider = new Stamplia\StampliaClient\Provider\Stamplia(array(
-        'clientId'  =>  '12_1fo52xvb0k1wcsck0oc88o8cos8gw44w8gksc0okgcks4gc40g',
-        'clientSecret'  =>  '5kwk0of79j8ksgw8c48csgo0so8o8ccs00ssows40c4wc8osg8',
-        'redirectUri'   =>  'http://stamplia-client-test.local/index.php'
+To log in and then be able to access private methods (user methods):
+
+    $client->login(array(
+        'email'         => '**',
+        'password'      => '**',
+        'app_id'        => '**',
+        'app_secret'    => '**'
     ));
 
-    $client = new \Stamplia\StampliaClient\Client\Api($provider);
+To see all methods available with this ApiClient you can use the following tool from the command line:
 
-Get the access token and save it to your database for example for later use
-
-    $access_token = $client->getAccessToken();
-    //TODO save access token for this user to local database
-
-The methods you can use are the following:
-
-    $client->createUser(array('email', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
-
-    $client->getUser(array('id'));
-
-    $client->getUserMe();
-
-    $client->putUser(array('id', 'name', 'language_code', 'type', 'password', 'paypal_email', 'company','address', 'zip', 'country', 'avatar', 'vat'));
-
-    $client->getCategories(array('top_level'));
-
-    $client->getCategory(array('name'));
-
-    $client->getCategoryTemplates(array('name', 'page', 'per_page', 'order', 'dir'));
-
-    $client->getTemplates(array('page', 'per_page', 'order', 'dir', 'category'));
-
-    $client->getTemplate(array('slug'));
-    
-    $client->getTemplateLitmustests(array('id'));
-
-    $client->postZip(array('userId', 'file'));
-
-    $client->getUserTemplates(array('userId'));
-
-    $client->getUserTemplate(array('userId', 'templateId'));
-
-    $client->postUserTemplate(array('userId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
-
-    $client->getUserPurchases(array('userId'));
-
-    $client->getUserPurchase(array('userId', 'purchaseId'));
-
-    $client->postUserPurchase(array('userId', 'coupon'));
-    
-    $client->downloadUserPurchase(array('userId', 'purchaseId', 'format'));
-
-    $client->makePayment(array('userId', 'invoiceId', 'method', 'redirect_uri'));
-    
-    $client->getPayment(array('userId', 'invoiceId'));
-
-    $client->putUserTemplate(array('userId','templateId', 'name', 'preview_url', 'description', 'zip_path', 'currency_code', 'price', 'draft', 'responsive', 'tags', 'color_codes', 'category'));
-
-    $client->postCart(array('user', 'coupon', 'templates'));
-
-    $client->putCart(array('id', 'coupon', 'templates'));
-
-    $client->deleteCart(array('id'));
-
-    $client->getCart(array('id'));
+    php doc.php | more
 
 
-Please read http://api.stamplia.com/documentation/getting_started/ for the specific parameters that each method accepts and their results
+Please read [our API documentation](http://doc.stamplia.com/documentation/getting_started/) for a more precise description of the parameters
+that each method accepts and their response.
